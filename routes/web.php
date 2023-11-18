@@ -29,23 +29,7 @@ Route::get('/', function () {
         // ]);
 
         // dd($tables);
-        dd(DB::connection("mysql")->table('Persons')->get()->first());
-        return "Database connection is working!";
-    } catch (\Exception $e) {
-        return "Failed to connect to the database. Please check your configuration. error:" . $e;
-    }
-});
-Route::get('test', function () {
-    return view('test');
-});
-Route::get('git', function () {
-    return view('test');
-});
-Route::get('/db-test', function () {
-    try {
-        DB::connection('mysql')->getPdo();
-        $tables = Schema::getAllTables();
-        dd($tables);
+        dd(DB::connection("mysql")->table('Users')->get()->first());
         return "Database connection is working!";
     } catch (\Exception $e) {
         return "Failed to connect to the database. Please check your configuration. error:" . $e;
