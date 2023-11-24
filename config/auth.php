@@ -39,7 +39,7 @@ return [
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
-        ],
+        ]
     ],
 
     /*
@@ -63,6 +63,7 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\Models\Users::class,
+            'username' => 'Username',
         ],
 
         // 'users' => [
@@ -96,6 +97,7 @@ return [
             'table' => 'password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,
+            'column' => 'Password'
         ],
     ],
 
