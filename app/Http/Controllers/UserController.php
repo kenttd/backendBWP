@@ -13,7 +13,8 @@ class UserController extends Controller
         if ($user) {
             return json_encode(["user" => $user]);
         } else {
-            return json_encode(['message' => 'Not found'], 404);
+            http_response_code(404);
+            return json_encode(['message' => 'Not found']);
         }
     }
 }
