@@ -40,7 +40,7 @@ class AuthController extends Controller
                 $user->password = Hash::make($request->input('password'));
                 $user->save();
             }
-            return response()->json(['message' => 'Login successful']);
+            return response()->json(['message' => 'Login successful', 'UserID' => $user->UserID]);
         } else {
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
