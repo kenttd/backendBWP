@@ -7,7 +7,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Hashtags extends Authenticatable
+class Hashtags extends Model
 {
     protected $table = 'Hashtags'; // Specify your table name
     protected $primaryKey = 'UserID'; // Specify your primary key column name

@@ -7,7 +7,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class DirectMessages extends Authenticatable
+class DirectMessages extends Model
 {
     protected $table = 'DirectMessages'; // Specify your table name
     protected $primaryKey = 'UserID'; // Specify your primary key column name

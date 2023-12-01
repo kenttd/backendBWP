@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -21,9 +22,10 @@ class AuthController extends Controller
             // Add other user fields as needed
             'ProfilePicture' => 'default.jpg', // You can set a default profile picture
             'Bio' => '', // You can set a default bio
-            'JoinDate' => now(), // This assumes your database supports the 'now()' function
+            'created_at' => now(), // This assumes your database supports the 'now()' function
             "Followers" => 0,
             "Following" => 0,
+            "access_key" => Str::random(64)
         ]);
         return response()->json(['message' => 'Registration successful']);
     }

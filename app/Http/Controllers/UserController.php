@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Tweets;
 use App\Models\Users;
 use Illuminate\Http\Request;
 
@@ -13,9 +14,17 @@ class UserController extends Controller
         if ($user) {
             return json_encode(["user" => $user]);
         } else {
-            // header("HTTP/1.1 404 Not Found");
             abort(404);
-            return json_encode(['message' => 'Not found', "test" => "abc"]);
         }
+    }
+    public function getPost($id)
+    {
+        $posts = Tweets::whereHas('user.follows', function ($query) use ($id) {
+            $query->where('FollowingID', $id);
+        })
+            ->with('user') // Load the user relationship to get user details in the posts
+            ->orderBy('created_at', 'desc') // Assuming Timestamp is the column for post timestamp
+            ->get();
+        return json_encode(['posts' => $posts]);
     }
 }

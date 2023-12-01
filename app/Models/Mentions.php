@@ -7,7 +7,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Mentions extends Authenticatable
+class Mentions extends Model
 {
     protected $table = 'Mentions'; // Specify your table name
     protected $primaryKey = 'UserID'; // Specify your primary key column name

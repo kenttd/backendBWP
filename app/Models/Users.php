@@ -16,7 +16,7 @@ class Users extends Authenticatable
 
     public $timestamps = false; // Disable timestamps
 
-    protected $fillable = ['Username', 'Password', 'Email', 'ProfilePicture', 'Bio', 'JoinDate', 'Followers', 'Following'];
+    protected $fillable = ['Username', 'Password', 'Email', 'ProfilePicture', 'Bio', 'created_at', 'Followers', 'Following', 'access_key'];
     protected $hidden = ['Password'];
 
     protected $attributes = [
@@ -25,6 +25,29 @@ class Users extends Authenticatable
         'Email' => 'email',
         'ProfilePicture' => 'profile_picture',
         'Bio' => 'bio',
-        'JoinDate' => 'join_date',
+        'created_at' => 'created_at',
     ];
+    public function tweets()
+    {
+        return $this->hasMany(Tweets::class, 'UserID');
+    }
+
+    public function follows()
+    {
+        return $this->hasMany(Follows::class, 'FollowerID');
+    }
+    public function follower()
+    {
+        return $this->belongsTo(Users::class, 'FollowerID');
+    }
+
+    public function following()
+    {
+        return $this->belongsTo(Users::class, 'FollowingID');
+    }
+
+    public function bookmarks()
+    {
+        return $this->hasMany(Bookmarks::class, 'UserID');
+    }
 }
