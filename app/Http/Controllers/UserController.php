@@ -37,7 +37,8 @@ class UserController extends Controller
             "UserID" => $uid,
             "TweetContent" => $TweetContent,
             "LikesCount" => 0,
-            "RetweetsCount" => 0
+            "RetweetsCount" => 0,
+            "RepliesCount" => 0
         ]);
         if ($newTweet) {
             return response()->json(['message' => 'successful']);
