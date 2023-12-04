@@ -27,6 +27,15 @@ class Users extends Authenticatable
         'Bio' => 'bio',
         'created_at' => 'created_at',
     ];
+    /**
+     * Get the password for the user.
+     *
+     * @return string
+     */
+    public function getAuthPassword()
+    {
+        return $this->Password;
+    }
     public function tweets()
     {
         return $this->hasMany(Tweets::class, 'UserID');

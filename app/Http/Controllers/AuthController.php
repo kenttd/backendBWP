@@ -32,19 +32,17 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $user = Users::where('Username', $request->input('username'))->first();
-
-        if ($user && Hash::check($request->input('password'), $user->Password)) {
-            // Password benar
-            if (Hash::needsRehash($user->password)) {
-                $user->password = Hash::make($request->input('password'));
-                $user->save();
-            }
-            return response()->json(['message' => 'Login successful', 'UserID' => $user->UserID]);
+        $credential = [
+            "Username" => $request->username,
+            "password" => $request->password
+        ];
+        if (Auth::attempt($credential)) {
+            return response()->json(['message' => 'Login successful', 'UserID' => Auth::user()->UserID]);
         } else {
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
     }
+
 
     public function logout()
     {
