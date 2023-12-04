@@ -27,7 +27,11 @@ class AuthController extends Controller
             "Following" => 0,
             "access_key" => Str::random(64)
         ]);
-        return response()->json(['message' => 'Registration successful']);
+        if ($user) {
+            return response()->json(['message' => 'Registration successful']);
+        } else {
+            return response()->json(['message' => 'Registration failed'], 401);
+        }
     }
 
     public function login(Request $request)

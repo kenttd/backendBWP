@@ -27,3 +27,4 @@ Route::post('/logout', [AuthController::class, 'logout']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::get('/{username}', [UserController::class, 'getUserByUsername']);
 Route::get('/post/{id}', [UserController::class, 'getPost']);
+Route::post('/quack', [UserController::class, 'quack']);

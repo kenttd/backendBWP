@@ -11,7 +11,8 @@ class Tweets extends Model
 {
     protected $table = 'Tweets'; // Specify your table name
     protected $primaryKey = 'UserID'; // Specify your primary key column name
-    public $timestamps = false; // Disable timestamps
+    public $timestamps = true; // Disable timestamps
+    protected $fillable = ['UserID', 'TweetContent', 'LikesCount', 'RetweetsCount'];
     public function user()
     {
         return $this->belongsTo(Users::class, 'UserID');
