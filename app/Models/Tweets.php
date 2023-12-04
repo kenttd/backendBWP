@@ -9,7 +9,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class Tweets extends Model
 {
-    protected $table = 'Tweets'; // Specify your table name
+    protected $table = 'Tweet'; // Specify your table name
     protected $primaryKey = 'UserID'; // Specify your primary key column name
     public $timestamps = true; // Disable timestamps
     protected $fillable = ['UserID', 'TweetContent', 'LikesCount', 'RetweetsCount', 'RepliesCount'];
