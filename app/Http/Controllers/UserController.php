@@ -45,4 +45,11 @@ class UserController extends Controller
             return response()->json(['message' => 'failed'], 401);
         }
     }
+
+    public function search(Request $request)
+    {
+        $username = $request->username;
+        $list = Users::where("Username", "LIKE", "%$username%")->get() ?? [];
+        return response()->json(["list" => $list]);
+    }
 }
