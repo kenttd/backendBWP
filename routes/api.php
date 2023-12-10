@@ -22,10 +22,11 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout']);
-Route::post('/register', [AuthController::class, 'register']);
-Route::get('/{username}', [UserController::class, 'getUserByUsername']);
-Route::get('/post/{id}', [UserController::class, 'getPost']);
-Route::get('/search/{username}', [UserController::class, 'search']);
-Route::post('/quack', [UserController::class, 'quack']);
+Route::post('/login', [AuthController::class, 'login']); // untuk login
+Route::post('/logout', [AuthController::class, 'logout']); // logout mungkin ga kepake (pake hapus cookie)
+Route::post('/register', [AuthController::class, 'register']); // untuk register
+Route::get('/{username}', [UserController::class, 'getUserByUsername']); // buat cari user
+Route::get('/post/{id}', [UserController::class, 'Post']); //buat home user, id dari cookie
+Route::get('/search/{username}', [UserController::class, 'search']); // waktu search
+Route::post('/quack', [UserController::class, 'quack']); // buat post tweet
+Route::get('/getpost/{id}', [UserController::class, 'getPost']); // buat dapet post dari user (ga harus user yang lagi log in)

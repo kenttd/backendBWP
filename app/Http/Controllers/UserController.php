@@ -18,7 +18,7 @@ class UserController extends Controller
             abort(404);
         }
     }
-    public function getPost($id)
+    public function Post($id)
     {
         $posts = Tweets::whereHas('user.follows', function ($query) use ($id) {
             $query->where('FollowingID', $id);
@@ -52,5 +52,19 @@ class UserController extends Controller
         $username = $request->username;
         $list = Users::where("Username", "LIKE", "%$username%")->get() ?? [];
         return response()->json(["list" => $list]);
+    }
+
+    public function getPost(Request $request)
+    {
+        $user = Users::find($request->id);
+        $tweets = $user->tweets;
+        return response()->json(["tweets" => $tweets]);
+    }
+
+    public function getBookmark(Request $request)
+    {
+        $user = Users::find($request->id);
+        $bookmarks = $user->bookmarks;
+        return response()->json(["bookmarks" => $bookmarks]);
     }
 }
