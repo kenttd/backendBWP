@@ -10,7 +10,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class Likes extends Model
 {
     protected $table = 'Likes'; // Specify your table name
-    protected $primaryKey = 'UserID'; // Specify your primary key column name
+    protected $primaryKey = 'LikeID'; // Specify your primary key column name
     public $timestamps = false; // Disable timestamps
     public function user()
     {

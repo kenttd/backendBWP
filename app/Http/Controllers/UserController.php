@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Likes;
 use App\Models\Tweets;
 use App\Models\Users;
 use Illuminate\Http\Request;
@@ -23,11 +24,31 @@ class UserController extends Controller
         $posts = Tweets::whereHas('user.follows', function ($query) use ($id) {
             $query->where('FollowingID', $id);
         })
-            ->with('user') // Load the user relationship to get user details in the posts
-            ->orderBy('created_at', 'desc') // Assuming Timestamp is the column for post timestamp
+            ->with(['user', 'likes' => function ($query) use ($id) {
+                $query->where('userid', $id);
+            }])
+            ->orderBy('created_at', 'desc')
             ->get();
-        return json_encode(['posts' => $posts]);
+
+        // Add a property 'liked' to each post to indicate whether the specified user has liked the post
+        $posts->each(function ($post) {
+            $post->liked = $post->likes->isNotEmpty();
+            unset($post->likes); // You may remove this line if you want to include 'likes' information in the response
+        });
+
+        return response()->json(['posts' => $posts]);
     }
+
+    // public function Post($id)
+    // {
+    //     $posts = Tweets::whereHas('user.follows', function ($query) use ($id) {
+    //         $query->where('FollowingID', $id);
+    //     })
+    //         ->with('user') // Load the user relationship to get user details in the posts
+    //         ->orderBy('created_at', 'desc') // Assuming Timestamp is the column for post timestamp
+    //         ->get();
+    //     return response()->json(['posts' => $posts]);
+    // }
 
     public function quack(Request $request)
     {
@@ -57,7 +78,13 @@ class UserController extends Controller
     public function getPost(Request $request)
     {
         $user = Users::find($request->id);
-        $tweets = $user->tweets;
+        $tweets = $user->tweets()->with('user')->get();
+        // $tweets->transform(function ($tweet) {
+        //     return [
+        //         'tweet' => $tweet,
+        //         'user' => $tweet->user
+        //     ];
+        // });
         return response()->json(["tweets" => $tweets]);
     }
 
@@ -66,5 +93,18 @@ class UserController extends Controller
         $user = Users::find($request->id);
         $bookmarks = $user->bookmarks;
         return response()->json(["bookmarks" => $bookmarks]);
+    }
+
+    public function doLike(Request $request)
+    {
+        $tweet = Tweets::find($request->TweetID);
+        $tweet->LikesCount += 1;
+        $tweet->save();
+        $newLike = Likes::create([
+            "UserID" => $request->UserID,
+            "TweetID" => $request->TweetID,
+            "TimeStamp" => now()
+        ]);
+        return response()->json(["message" => "success"]);
     }
 }

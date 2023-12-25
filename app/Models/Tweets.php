@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use League\CommonMark\Extension\Mention\Mention;
 
 class Tweets extends Model
 {
@@ -25,7 +26,7 @@ class Tweets extends Model
 
     public function hashtags()
     {
-        return $this->hasMany(Hashtag::class, 'TweetID');
+        return $this->hasMany(Hashtags::class, 'TweetID');
     }
 
     public function mentions()
