@@ -98,13 +98,15 @@ class UserController extends Controller
     public function doLike(Request $request)
     {
         $tweet = Tweets::find($request->TweetID);
-        $tweet->LikesCount += 1;
-        $tweet->save();
-        $newLike = Likes::create([
-            "UserID" => $request->UserID,
-            "TweetID" => $request->TweetID,
-            "TimeStamp" => now()
-        ]);
-        return response()->json(["message" => "success"]);
+        if ($tweet) {
+            $tweet->LikesCount += 1;
+            $tweet->save();
+            $newLike = Likes::create([
+                "UserID" => $request->UserID,
+                "TweetID" => $request->TweetID,
+                "TimeStamp" => now()
+            ]);
+            return response()->json(["message" => "success"]);
+        } else return response()->json(["message" => "failed"]);
     }
 }

@@ -11,7 +11,7 @@ use League\CommonMark\Extension\Mention\Mention;
 class Tweets extends Model
 {
     protected $table = 'Tweet'; // Specify your table name
-    protected $primaryKey = 'UserID'; // Specify your primary key column name
+    protected $primaryKey = 'TweetID'; // Specify your primary key column name
     public $timestamps = true; // Disable timestamps
     protected $fillable = ['UserID', 'TweetContent', 'LikesCount', 'RetweetsCount', 'RepliesCount'];
     public function user()
