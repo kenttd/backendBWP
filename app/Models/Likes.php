@@ -12,6 +12,7 @@ class Likes extends Model
     protected $table = 'Likes'; // Specify your table name
     protected $primaryKey = 'LikeID'; // Specify your primary key column name
     public $timestamps = false; // Disable timestamps
+    protected $fillable = ['UserID', 'TweetID', 'TimeStamp'];
     public function user()
     {
         return $this->belongsTo(Users::class, 'UserID');
