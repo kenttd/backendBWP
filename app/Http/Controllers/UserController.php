@@ -109,9 +109,10 @@ class UserController extends Controller
     {
         $tweet = Tweets::find($request->TweetID);
         if ($tweet) {
-            $tweet->LikesCount -= 1;
-            $tweet->save();
-            $like = Likes::where("LikeID", $request->LikeID)->delete();
+            // $tweet->LikesCount -= 1;
+            // $tweet->save();
+            $like = Likes::find($request->LikeID);
+            $like->delete();
             return response()->json(["message" => "success"]);
         } else return response()->json(["message" => "failed"]);
     }
