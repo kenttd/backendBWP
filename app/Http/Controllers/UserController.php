@@ -109,7 +109,7 @@ class UserController extends Controller
                     "TweetID" => $request->TweetID
                 ]);
             }
-            return response()->json(["LikeID" => $newLike->LikeID]);
+            return response()->json(["LikeID" => $newLike->LikeID ?? $request->LikeID]);
         } else return response()->json(["message" => "failed"]);
     }
 
