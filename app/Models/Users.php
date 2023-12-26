@@ -59,4 +59,8 @@ class Users extends Authenticatable
     {
         return $this->hasMany(Bookmarks::class, 'UserID');
     }
+    public function likes()
+    {
+        return $this->hasMany(Likes::class, 'UserID');
+    }
 }

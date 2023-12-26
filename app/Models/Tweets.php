@@ -33,4 +33,8 @@ class Tweets extends Model
     {
         return $this->hasMany(Mention::class, 'TweetID');
     }
+    public function retweets()
+    {
+        return $this->hasMany(Retweets::class, 'TweetID');
+    }
 }

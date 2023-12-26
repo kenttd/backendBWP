@@ -9,7 +9,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class Retweets extends Model
 {
-    protected $table = 'Retweets'; // Specify your table name
-    protected $primaryKey = 'UserID'; // Specify your primary key column name
-    public $timestamps = false; // Disable timestamps
+    protected $table = 'Retweet'; // Specify your table name
+    protected $primaryKey = 'RetweetID'; // Specify your primary key column name
+    public $timestamps = true; // Disable timestamps
 }
