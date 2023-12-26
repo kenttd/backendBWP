@@ -91,7 +91,7 @@ class UserController extends Controller
     {
         $tweet = Tweets::find($request->TweetID);
         if ($tweet) {
-            $tweet->LikesCount = 0;
+            $tweet->LikesCount += 1;
             $tweet->save();
             if ($request->update == false) {
                 $like = Likes::where("LikeID", $request->LikeID)->restore();
