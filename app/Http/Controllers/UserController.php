@@ -30,25 +30,17 @@ class UserController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        // Add a property 'liked' to each post to indicate whether the specified user has liked the post
+        // Modify the 'with' method to include 'likeid'
         $posts->each(function ($post) {
             $post->liked = $post->likes->isNotEmpty();
+            // Add 'likeid' to each post
+            $post->likeid = $post->liked ? $post->likes->first()->likeid : null;
             unset($post->likes); // You may remove this line if you want to include 'likes' information in the response
         });
 
         return response()->json(['posts' => $posts]);
     }
 
-    // public function Post($id)
-    // {
-    //     $posts = Tweets::whereHas('user.follows', function ($query) use ($id) {
-    //         $query->where('FollowingID', $id);
-    //     })
-    //         ->with('user') // Load the user relationship to get user details in the posts
-    //         ->orderBy('created_at', 'desc') // Assuming Timestamp is the column for post timestamp
-    //         ->get();
-    //     return response()->json(['posts' => $posts]);
-    // }
 
     public function quack(Request $request)
     {
@@ -99,9 +91,9 @@ class UserController extends Controller
     {
         $tweet = Tweets::find($request->TweetID);
         if ($tweet) {
-            $tweet->LikesCount += 1;
+            $tweet->LikesCount = 0;
             $tweet->save();
-            if ($request->update) {
+            if ($request->update == false) {
                 $like = Likes::where("LikeID", $request->LikeID)->restore();
             } else {
                 $newLike = Likes::create([
@@ -109,7 +101,7 @@ class UserController extends Controller
                     "TweetID" => $request->TweetID
                 ]);
             }
-            return response()->json(["LikeID" => $newLike->LikeID ?? $request->LikeID]);
+            return response()->json(["LikeID" => $newLike->LikeID ?? $request->LikeID, "update" => $request->update]);
         } else return response()->json(["message" => "failed"]);
     }
 
