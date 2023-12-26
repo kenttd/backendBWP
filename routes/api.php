@@ -31,3 +31,4 @@ Route::get('/search/{username}', [UserController::class, 'search']); // waktu se
 Route::post('/quack', [UserController::class, 'quack']); // buat post tweet
 Route::get('/getpost/{id}', [UserController::class, 'getPost']); // buat dapet post dari user (ga harus user yang lagi log in)
 Route::post('/doLike', [UserController::class, 'doLike']);
+Route::post('/doUnLike', [UserController::class, 'doUnLike']);
