@@ -11,7 +11,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class Likes extends Model
 {
     use SoftDeletes;
-    protected $table = 'Likes'; // Specify your table name
+    protected $table = 'Likess'; // Specify your table name
     protected $primaryKey = 'LikeID'; // Specify your primary key column name
     public $timestamps = true;
     protected $fillable = ['UserID', 'TweetID', 'TimeStamp'];
