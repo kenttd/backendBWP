@@ -37,3 +37,4 @@ Route::post('/doLike', [UserController::class, 'doLike']);
 Route::post('/doUnLike', [UserController::class, 'doUnLike']);
 Route::post('/doBookmark', [UserController::class, 'doBookmark']);
 Route::post('/doUnBookmark', [UserController::class, 'doUnBookmark']);
+Route::get('/getuser', [AuthController::class, 'getuser']);
