@@ -88,7 +88,7 @@ class UserController extends Controller
     {
         $user = Users::find($id);
         $bookmarks = $user->bookmarks()->with(['Tweet' => function ($query) use ($id) {
-            $query->with(['likes' => function ($query) use ($id) {
+            $query->with(['user', 'likes' => function ($query) use ($id) {
                 $query->where('UserID', $id);
             }, 'retweets' => function ($query) use ($id) {
                 $query->where('UserID', $id);
