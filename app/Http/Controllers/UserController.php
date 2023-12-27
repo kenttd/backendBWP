@@ -71,6 +71,13 @@ class UserController extends Controller
         return response()->json(["list" => $list]);
     }
 
+    public function searchTweet(Request $request)
+    {
+        $q = $request->q;
+        $list = Users::where("TweetContent", "LIKE", "%$q%")->get() ?? [];
+        return response()->json(["list" => $list]);
+    }
+
     public function getPost(Request $request)
     {
         $user = Users::find($request->id);
@@ -131,28 +138,38 @@ class UserController extends Controller
     {
         $tweet = Tweets::find($request->TweetID);
         if ($tweet) {
-            $tweet->LikesCount -= 1;
+            $tweet->LikesCount = 0;
             $tweet->save();
             $like = Likes::find($request->LikeID);
             $like->delete();
-            return response()->json(["message" => "success"]);
+            if ($like->trashed()) {
+                return response()->json(["message" => "success"]);
+            } else return response()->json(["message" => "failed"]);
         } else return response()->json(["message" => "failed"]);
     }
 
     public function doBookmark(Request $request)
     {
-        $tweet = Tweets::find($request->TweetID);
-        if ($tweet) {
-            if ($request->update == false) {
-                $bookmark = Bookmarks::where("BookmarkID", $request->BookmarkID)->restore();
-            } else {
-                $newBookmark = Bookmarks::create([
-                    "UserID" => $request->UserID,
-                    "TweetID" => $request->TweetID
-                ]);
-            }
-            return response()->json(["LikeID" => $newBookmark->BookmarkID ?? $request->BookmarkID, "update" => $request->update]);
+        $user = Users::find($request->UserID);
+        $bookmark = $user->bookmarks()->where("TweetID", $request->TweetID);
+
+        if (!$bookmark->exists()) {
+            $newBookmark = Bookmarks::create([
+                "UserID" => $request->UserID,
+                "TweetID" => $request->TweetID
+            ]);
+            return response()->json(["BookmarkID" => $newBookmark->BookmarkID]);
         } else return response()->json(["message" => "failed"]);
+    }
+
+    public function doUnBookmark(Request $request)
+    {
+        $bookmark = Bookmarks::find($request->BookmarkID);
+        if ($bookmark) {
+            $bookmark->forceDelete();
+            return response()->json(["message" => "success"]);
+        }
+        return response()->json(["message" => "failed"]);
     }
 
     public function getLike(Request $request)
