@@ -84,11 +84,29 @@ class UserController extends Controller
         return response()->json(["tweets" => $tweets]);
     }
 
-    public function getBookmark(Request $request)
+    public function getBookmark($id)
     {
-        $user = Users::find($request->id);
-        $bookmarks = $user->bookmarks()->with('Tweet')->get();
-        return response()->json(["bookmarks" => $bookmarks]);
+        $user = Users::find($id);
+        $bookmarks = $user->bookmarks()->with(['Tweet' => function ($query) use ($id) {
+            $query->with(['likes' => function ($query) use ($id) {
+                $query->where('UserID', $id);
+            }, 'retweets' => function ($query) use ($id) {
+                $query->where('UserID', $id);
+            }]);
+        }])->get();
+
+        $bookmarks->each(function ($bookmark) {
+            $bookmark->Tweet->liked = $bookmark->Tweet->likes->isNotEmpty();
+            $bookmark->Tweet->likeid = $bookmark->Tweet->liked ? $bookmark->Tweet->likes->first()->LikeID : null;
+            unset($bookmark->Tweet->likes);
+            $bookmark->Tweet->retweeted = $bookmark->Tweet->retweets->isNotEmpty();
+            $bookmark->Tweet->retweetid = $bookmark->Tweet->retweeted ? $bookmark->Tweet->retweets->first()->RetweetID : null;
+            unset($bookmark->Tweet->retweets);
+        });
+        return response()->json(['posts' => $bookmarks]);
+        // $user = Users::find($request->id);
+        // $bookmarks = $user->bookmarks()->with('Tweet')->get();
+        // return response()->json(["bookmarks" => $bookmarks]);
     }
 
     public function doLike(Request $request)
