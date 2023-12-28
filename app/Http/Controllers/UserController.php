@@ -90,8 +90,8 @@ class UserController extends Controller
 
         return response()->json([
             "tweets" => $tweets,
-            "userIsFollowingRequester" => $userIsFollowingRequester,
-            "requesterIsFollowingUser" => $requesterIsFollowingUser
+            "isFollowed" => $userIsFollowingRequester,
+            "isFollowing" => $requesterIsFollowingUser
         ]);
         // $user = Users::find($request->id);
         // $tweets = $user->tweets()->with('user')->get();
