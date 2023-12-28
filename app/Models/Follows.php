@@ -12,6 +12,9 @@ class Follows extends Model
     protected $table = 'Follows'; // Specify your table name
     protected $primaryKey = 'FollowID'; // Specify your primary key column name
     public $timestamps = false; // Disable timestamps
+    protected $fillable = [
+        'FollowerID', 'FollowingID'
+    ];
     public function follower()
     {
         return $this->belongsTo(Users::class, 'FollowerID');

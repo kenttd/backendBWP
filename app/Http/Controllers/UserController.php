@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bookmarks;
+use App\Models\Follows;
 use App\Models\Likes;
 use App\Models\Tweets;
 use App\Models\Users;
@@ -93,14 +94,6 @@ class UserController extends Controller
             "isFollowed" => $userIsFollowingRequester,
             "isFollowing" => $requesterIsFollowingUser
         ]);
-        // $user = Users::find($request->id);
-        // $tweets = $user->tweets()->with('user')->get();
-        // $tweets->transform(function ($tweet) {
-        //     return [
-        //         'tweet' => $tweet,
-        //         'user' => $tweet->user
-        //     ];
-        // });
         return response()->json(["tweets" => $tweets]);
     }
 
@@ -124,9 +117,6 @@ class UserController extends Controller
             unset($bookmark->Tweet->retweets);
         });
         return response()->json(['posts' => $bookmarks]);
-        // $user = Users::find($request->id);
-        // $bookmarks = $user->bookmarks()->with('Tweet')->get();
-        // return response()->json(["bookmarks" => $bookmarks]);
     }
 
     public function doLike(Request $request)
@@ -190,5 +180,41 @@ class UserController extends Controller
         $user = Users::find($request->id);
         $likes = $user->likes()->with('Tweet')->get();
         return response()->json(["likes" => $likes]);
+    }
+
+    public function doFolllow(Request $request)
+    {
+        //following orang yang di follow
+        $follow = Follows::where("FollowerID", $request->FollowerID)->where("FollowingID", $request->FollowingID);
+        if (!$follow->exists()) {
+            $following = Users::find($request->FollowingID);
+            $following->Followers += 1;
+            $following->save();
+            $follower = Users::find($request->FollowerID);
+            $follower->Following += 1;
+            $follower->save();
+            $follow = Follows::create([
+                "FollowerID" => $request->FollowerID,
+                "FollowingID" => $request->FollowingID
+            ]);
+            if ($follow) {
+                return response()->json(["message" => "success"]);
+            } else return response()->json(["message" => "failed"]);
+        } else return response()->json(["message" => "failed"]);
+    }
+
+    public function doUnfollow(Request $request)
+    {
+        $follow = Follows::where("FollowerID", $request->FollowerID)->where("FollowingID", $request->FollowingID);
+        if ($follow) {
+            $follow->delete();
+            $following = Users::find($request->FollowingID);
+            $following->Followers -= 1;
+            $following->save();
+            $follower = Users::find($request->FollowerID);
+            $follower->Following -= 1;
+            $follower->save();
+            return response()->json(["message" => "success"]);
+        } else return response()->json(["message" => "failed"]);
     }
 }
