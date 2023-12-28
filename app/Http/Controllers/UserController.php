@@ -22,7 +22,7 @@ class UserController extends Controller
     }
     public function Post($id)
     {
-        $posts = Tweets::whereHas('user.follows', function ($query) use ($id) {
+        $posts = Tweets::whereHas('user.following', function ($query) use ($id) {
             $query->where('FollowingID', $id);
         })
             ->with(['user', 'likes' => function ($query) use ($id) {
