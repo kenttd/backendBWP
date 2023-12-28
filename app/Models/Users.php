@@ -40,20 +40,24 @@ class Users extends Authenticatable
     {
         return $this->hasMany(Tweets::class, 'UserID');
     }
-
-    public function follows()
+    public function following()
     {
         return $this->hasMany(Follows::class, 'FollowerID');
     }
-    public function follower()
-    {
-        return $this->belongsTo(Users::class, 'FollowerID');
-    }
 
-    public function following()
+    public function followers()
     {
-        return $this->belongsTo(Users::class, 'FollowingID');
+        return $this->hasMany(Follows::class, 'FollowingID');
     }
+    // public function follower()
+    // {
+    //     return $this->belongsTo(Users::class, 'FollowerID');
+    // }
+
+    // public function following()
+    // {
+    //     return $this->belongsTo(Users::class, 'FollowingID');
+    // }
 
     public function bookmarks()
     {

@@ -29,7 +29,7 @@ Route::get('/{username}', [UserController::class, 'getUserByUsername']); // buat
 Route::get('/post/{id}', [UserController::class, 'Post']); //buat home user, id dari cookie
 Route::get('/search/{username}', [UserController::class, 'search']); // waktu search
 Route::post('/quack', [UserController::class, 'quack']); // buat post tweet
-Route::get('/getpost/{id}', [UserController::class, 'getPost']); // buat dapet post dari user (ga harus user yang lagi log in)
+Route::get('/getpost/{id}/{requester}', [UserController::class, 'getPost']); // buat dapet post dari user (ga harus user yang lagi log in)
 Route::get('/getBookmark/{id}', [UserController::class, 'getBookmark']);
 Route::get('/getLike/{id}', [UserController::class, 'getLike']);
 

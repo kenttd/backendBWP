@@ -10,7 +10,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class Follows extends Model
 {
     protected $table = 'Follows'; // Specify your table name
-    protected $primaryKey = 'UserID'; // Specify your primary key column name
+    protected $primaryKey = 'FollowID'; // Specify your primary key column name
     public $timestamps = false; // Disable timestamps
     public function follower()
     {

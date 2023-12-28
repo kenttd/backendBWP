@@ -81,7 +81,20 @@ class UserController extends Controller
     public function getPost(Request $request)
     {
         $user = Users::find($request->id);
+        $requester = Users::find($request->requester);
+
+        $userIsFollowingRequester = $user->following->contains('FollowingID', $request->requester);
+        $requesterIsFollowingUser = $user->followers->contains('FollowerID', $request->requester);
+
         $tweets = $user->tweets()->with('user')->get();
+
+        return response()->json([
+            "tweets" => $tweets,
+            "userIsFollowingRequester" => $userIsFollowingRequester,
+            "requesterIsFollowingUser" => $requesterIsFollowingUser
+        ]);
+        // $user = Users::find($request->id);
+        // $tweets = $user->tweets()->with('user')->get();
         // $tweets->transform(function ($tweet) {
         //     return [
         //         'tweet' => $tweet,
