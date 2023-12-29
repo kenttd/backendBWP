@@ -41,9 +41,12 @@ class AuthController extends Controller
             "password" => $request->password
         ];
         if (Auth::attempt($credential)) {
-            return response()->json(['message' => 'Login successful', 'UserID' => Auth::user()->UserID, 'Username' => Auth::user()->Username]);
+            if (Auth::user()->isBanned) {
+                return response()->json(['message' => 'You are banned'], 401);
+            }
+            return response()->json(['message' => 'success', 'UserID' => Auth::user()->UserID, 'Username' => Auth::user()->Username, "isVerified" => Auth::user()->isVerified, "isStaff" => Auth::user()->isStaff]);
         } else {
-            return response()->json(['message' => 'Invalid credentials'], 401);
+            return response()->json(['message' => 'Login failed, wrong password/username.'], 401);
         }
     }
 

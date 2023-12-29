@@ -92,7 +92,9 @@ class UserController extends Controller
         return response()->json([
             "tweets" => $tweets,
             "isFollowed" => $userIsFollowingRequester,
-            "isFollowing" => $requesterIsFollowingUser
+            "isFollowing" => $requesterIsFollowingUser,
+            "isVerified" => $user->isVerified,
+            "isStaff" => $user->isStaff
         ]);
         return response()->json(["tweets" => $tweets]);
     }
