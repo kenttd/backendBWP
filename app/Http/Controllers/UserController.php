@@ -182,7 +182,7 @@ class UserController extends Controller
         return response()->json(["likes" => $likes]);
     }
 
-    public function doFolllow(Request $request)
+    public function doFollow(Request $request)
     {
         //following orang yang di follow
         $follow = Follows::where("FollowerID", $request->FollowerID)->where("FollowingID", $request->FollowingID);
