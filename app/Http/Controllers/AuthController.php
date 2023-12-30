@@ -8,30 +8,42 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
     public function register(Request $request)
     {
-        $user = Users::create([
-            'Username' => $request->input('username'),
-            "Password" => bcrypt($request->input('password')),
-            // 'Password' => Hash::make($request->input('password')),
-            'Email' => $request->input('email'),
-            // Add other user fields as needed
-            'ProfilePicture' => 'default.jpg', // You can set a default profile picture
-            'Bio' => '', // You can set a default bio
-            'created_at' => now(), // This assumes your database supports the 'now()' function
-            "Followers" => 0,
-            "Following" => 0,
-            "access_key" => Str::random(64)
+        $validator = Validator::make($request->all(), [
+            'username' => 'required',
+            'password' => 'required|min:8',
+            'email' => 'required|email'
         ]);
-        if ($user) {
-            return response()->json(['message' => 'Registration successful']);
-        } else {
-            return response()->json(['message' => 'Registration failed'], 401);
+        if (!$validator->fails()) {
+            $user = Users::create([
+                'Username' => $request->input('username'),
+                "Password" => bcrypt($request->input('password')),
+                // 'Password' => Hash::make($request->input('password')),
+                'Email' => $request->input('email'),
+                // Add other user fields as needed
+                'ProfilePicture' => 'picture.jpg', // You can set a default profile picture
+                'Bio' => "this user doesn't have a bio yet.", // You can set a default bio
+                "Followers" => 0,
+                "Following" => 0,
+                "isVerified" => 0,
+                "isStaff" => 0,
+                "isBanned" => 0,
+                "code" => Str::random(5),
+                "link" => "quacker.online"
+            ]);
+            if ($user) {
+                return response()->json(['message' => 'Registration successful']);
+            } else {
+                return response()->json(['message' => 'Registration failed'], 401);
+            }
         }
+        return response()->json(['error' => $validator->errors()], 401);
     }
 
     public function login(Request $request)
