@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bookmarks;
+use App\Models\DirectMessages;
 use App\Models\Follows;
 use App\Models\Likes;
 use App\Models\Tweets;
 use App\Models\Users;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -218,5 +220,10 @@ class UserController extends Controller
             $follower->save();
             return response()->json(["message" => "success"]);
         } else return response()->json(["message" => "failed"]);
+    }
+    public function getMessages(Request $request)
+    {
+        $latestMessages = DirectMessages::getLatestMessages($request->RequesterID);
+        return response()->json(["latestMessages" => $latestMessages]);
     }
 }

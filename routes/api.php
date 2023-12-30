@@ -41,3 +41,4 @@ Route::post('/doFollow', [UserController::class, 'doFollow']);
 Route::post('/doUnfollow', [UserController::class, 'doUnfollow']);
 
 Route::get('/getuser', [AuthController::class, 'getuser']);
+Route::post('/getMessages', [UserController::class, 'getMessages']);
