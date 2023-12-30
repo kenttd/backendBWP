@@ -226,4 +226,64 @@ class UserController extends Controller
         $latestMessages = DirectMessages::getLatestMessages($request->RequesterID);
         return response()->json(["latestMessages" => $latestMessages]);
     }
+
+    public function doVerify(Request $request)
+    {
+        $user = Users::where("UserID", $request->UserID)->update(["isVerified" => true]);
+        if ($user) {
+            return response()->json(["message" => "success"]);
+        }
+        return response()->json(["message" => "failed"]);
+    }
+
+    public function doBan(Request $request)
+    {
+        $user = Users::where("UserID", $request->UserID)->update(["isBanned" => true]);
+        if ($user) {
+            return response()->json(["message" => "success"]);
+        }
+        return response()->json(["message" => "failed"]);
+    }
+
+    public function doUnverify(Request $request)
+    {
+        $user = Users::where("UserID", $request->UserID)->update(["isVerified" => false]);
+        if ($user) {
+            return response()->json(["message" => "success"]);
+        }
+        return response()->json(["message" => "failed"]);
+    }
+
+    public function doUnban(Request $request)
+    {
+        $user = Users::where("UserID", $request->UserID)->update(["isBanned" => false]);
+        if ($user) {
+            return response()->json(["message" => "success"]);
+        }
+        return response()->json(["message" => "failed"]);
+    }
+
+    public function doStaff(Request $request)
+    {
+        $user = Users::where("UserID", $request->UserID)->update(["isStaff" => true]);
+        if ($user) {
+            return response()->json(["message" => "success"]);
+        }
+        return response()->json(["message" => "failed"]);
+    }
+
+    public function doUnstaff(Request $request)
+    {
+        $user = Users::where("UserID", $request->UserID)->update(["isStaff" => false]);
+        if ($user) {
+            return response()->json(["message" => "success"]);
+        }
+        return response()->json(["message" => "failed"]);
+    }
+
+    public function getVerifiedPost()
+    {
+        $users = Users::where('isVerified', true)->with('tweets')->get();
+        return response()->json(["users" => $users]);
+    }
 }
