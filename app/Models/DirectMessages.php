@@ -16,22 +16,23 @@ class DirectMessages extends Model
 
     public static function getLatestMessages($requesterId)
     {
-        $sub = self::select('SenderID', 'ReceiverID', DB::raw('MAX(Timestamp) as MaxTimestamp'))
-            ->groupBy('SenderID', 'ReceiverID');
+        $sub = self::select(DB::raw('LEAST(SenderID, ReceiverID) as User1'), DB::raw('GREATEST(SenderID, ReceiverID) as User2'), DB::raw('MAX(Timestamp) as MaxTimestamp'))
+            ->where(function ($query) use ($requesterId) {
+                $query->where('SenderID', $requesterId)
+                    ->orWhere('ReceiverID', $requesterId);
+            })
+            ->groupBy('User1', 'User2');
 
         $latestMessages = self::joinSub($sub, 'sub', function ($join) {
-            $join->on('DirectMessages.SenderID', '=', 'sub.SenderID')
-                ->on('DirectMessages.ReceiverID', '=', 'sub.ReceiverID')
+            $join->on('DirectMessages.SenderID', '=', DB::raw('LEAST(sub.User1, sub.User2)'))
+                ->on('DirectMessages.ReceiverID', '=', DB::raw('GREATEST(sub.User1, sub.User2)'))
                 ->on('DirectMessages.Timestamp', '=', 'sub.MaxTimestamp');
         })
             ->join('Users as Sender', 'DirectMessages.SenderID', '=', 'Sender.UserID') // Join with Users table for sender
             ->join('Users as Receiver', 'DirectMessages.ReceiverID', '=', 'Receiver.UserID') // Join with Users table for receiver
-            ->where(function ($query) use ($requesterId) {
-                $query->where('DirectMessages.SenderID', $requesterId)
-                    ->orWhere('DirectMessages.ReceiverID', $requesterId);
-            })
-            ->select('DirectMessages.*', 'Sender.Username as senderName', 'Receiver.Username as receiverName') // Select sender's and receiver's name
-            ->orderby("Timestamp", "desc")->first();
+            ->select('DirectMessages.MessageContent', 'sub.MaxTimestamp', 'Sender.Username as senderName', 'Receiver.Username as receiverName') // Select only the columns that are part of the GROUP BY clause or are used with an aggregate function
+            ->orderby("MaxTimestamp", "desc")
+            ->get(); // Use get() instead of first()
 
         return $latestMessages;
     }
