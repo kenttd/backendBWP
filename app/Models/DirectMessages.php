@@ -14,6 +14,7 @@ class DirectMessages extends Model
     protected $primaryKey = 'MessageID'; // Specify your primary key column name
     public $timestamps = false; // Disable timestamps
 
+    protected $fillable = ['SenderID', 'ReceiverID', 'MessageContent', 'timestamp', 'isRead'];
     public static function getLatestMessages($requesterId)
     {
         $sub = self::select(DB::raw('LEAST(SenderID, ReceiverID) as User1'), DB::raw('GREATEST(SenderID, ReceiverID) as User2'), DB::raw('MAX(Timestamp) as MaxTimestamp'))

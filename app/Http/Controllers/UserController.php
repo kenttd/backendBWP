@@ -305,4 +305,40 @@ class UserController extends Controller
 
         return response()->json(['messages' => $messages]);
     }
+
+    public function sendMessage(Request $request)
+    {
+        $message = DirectMessages::create([
+            'SenderID' => $request->SenderID,
+            'ReceiverID' => $request->ReceiverID,
+            'MessageContent' => $request->message,
+            'timestamp' => now(),
+            'isRead' => false
+        ]);
+        if ($message) {
+            return response()->json(['message' => $message]);
+        }
+        return response()->json(['message' => 'failed']);
+    }
+
+    public function deleteMessage(Request $request)
+    {
+        $message = DirectMessages::find($request->MessageID);
+        if ($message) {
+            $message->delete();
+            return response()->json(['message' => 'success']);
+        }
+        return response()->json(['message' => 'failed']);
+    }
+
+    public function editMessage(Request $request)
+    {
+        $message = DirectMessages::find($request->MessageID);
+        if ($message) {
+            $message->MessageContent = $request->MessageContent;
+            $message->save();
+            return response()->json(['message' => 'success']);
+        }
+        return response()->json(['message' => 'failed']);
+    }
 }

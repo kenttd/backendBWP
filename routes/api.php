@@ -48,4 +48,7 @@ Route::post('/doStaff', [UserController::class, 'doStaff']);
 Route::post('/doUnstaff', [UserController::class, 'doUnstaff']);
 Route::get('/getVerifiedPost', [UserController::class, 'getVerifiedPost']);
 Route::post('/getMessagesSpecific', [UserController::class, 'getMessagesSpecific']);
+Route::post('/sendMessage', [UserController::class, 'sendMessage']);
+Route::post('/editMessage', [UserController::class, 'editMessage']);
+Route::post('/deleteMessage', [UserController::class, 'deleteMessage']);
 Route::get('/{username}', [UserController::class, 'getUserByUsername']); // buat cari user
