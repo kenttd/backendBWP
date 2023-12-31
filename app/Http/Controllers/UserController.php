@@ -286,4 +286,23 @@ class UserController extends Controller
         $users = Users::where('isVerified', true)->with('tweets')->get();
         return response()->json(["users" => $users]);
     }
+
+    public function getMessagesSpecific(Request $request)
+    {
+        $messages = DirectMessages::where(function ($query) use ($request) {
+            $query->where('SenderID', $request->RequesterId)
+                ->where('ReceiverID', $request->otherPersonId);
+        })
+            ->orWhere(function ($query) use ($request) {
+                $query->where('SenderID', $request->otherPersonId)
+                    ->where('ReceiverID', $request->RequesterId);
+            })
+            ->get();
+
+        foreach ($messages as $message) {
+            $message->sentByRequester = $message->SenderID == $request->RequesterId;
+        }
+
+        return response()->json(['messages' => $messages]);
+    }
 }

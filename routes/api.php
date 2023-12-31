@@ -47,4 +47,5 @@ Route::post('/doUnban', [UserController::class, 'doUnban']);
 Route::post('/doStaff', [UserController::class, 'doStaff']);
 Route::post('/doUnstaff', [UserController::class, 'doUnstaff']);
 Route::get('/getVerifiedPost', [UserController::class, 'getVerifiedPost']);
-Route::get('/{username}', [UserController::class, 'getUserByUsername']);// buat cari user
+Route::post('/getMessagesSpecific', [UserController::class, 'getMessagesSpecific']);
+Route::get('/{username}', [UserController::class, 'getUserByUsername']); // buat cari user
