@@ -378,6 +378,8 @@ class UserController extends Controller
 
     public function getTweetDetail($TweetID)
     {
+
+        if (Tweets::find($TweetID) == null) abort(404);
         $tweet = Tweets::where('TweetID', $TweetID)->with(['user', 'likes' => function ($query) use ($TweetID) {
             $query->where('TweetID', $TweetID);
         }, 'retweets' => function ($query) use ($TweetID) {
