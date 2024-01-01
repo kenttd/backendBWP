@@ -180,7 +180,7 @@ class UserController extends Controller
         if ($tweet) {
             $tweet->RetweetCount -= 1;
             $tweet->save();
-            $retweet = Retweets::find($request->LikeID);
+            $retweet = Retweets::find($request->RetweetID);
             $retweet->delete();
             if ($retweet->trashed()) {
                 return response()->json(["message" => "success"]);
