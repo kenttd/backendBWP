@@ -34,6 +34,8 @@ Route::get('/getBookmark/{id}', [UserController::class, 'getBookmark']);
 Route::get('/getLike/{id}', [UserController::class, 'getLike']);
 Route::post('/doLike', [UserController::class, 'doLike']);
 Route::post('/doUnLike', [UserController::class, 'doUnLike']);
+Route::post('/doRetweet', [UserController::class, 'doRetweet']);
+Route::post('/doUnRetweet', [UserController::class, 'doUnRetweet']);
 Route::post('/doBookmark', [UserController::class, 'doBookmark']);
 Route::post('/doUnBookmark', [UserController::class, 'doUnBookmark']);
 Route::post('/doFollow', [UserController::class, 'doFollow']);
