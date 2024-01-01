@@ -6,6 +6,7 @@ use App\Models\Bookmarks;
 use App\Models\DirectMessages;
 use App\Models\Follows;
 use App\Models\Likes;
+use App\Models\Retweets;
 use App\Models\Tweets;
 use App\Models\Users;
 use Illuminate\Http\Request;
@@ -145,11 +146,43 @@ class UserController extends Controller
     {
         $tweet = Tweets::find($request->TweetID);
         if ($tweet) {
-            $tweet->LikesCount = 0;
+            $tweet->LikesCount -= 1;
             $tweet->save();
             $like = Likes::find($request->LikeID);
             $like->delete();
             if ($like->trashed()) {
+                return response()->json(["message" => "success"]);
+            } else return response()->json(["message" => "failed"]);
+        } else return response()->json(["message" => "failed"]);
+    }
+
+    public function doRetweet(Request $request)
+    {
+        $tweet = Tweets::find($request->TweetID);
+        if ($tweet) {
+            $tweet->RetweetsCount += 1;
+            $tweet->save();
+            if ($request->update == false) {
+                $retweet = Retweets::where("RetweetID", $request->RetweetID)->restore();
+            } else {
+                $newRetweet = Retweets::create([
+                    "UserID" => $request->UserID,
+                    "TweetID" => $request->TweetID
+                ]);
+            }
+            return response()->json(["LikeID" => $newRetweet->RetweetID ?? $request->RetweetID, "update" => $request->update]);
+        } else return response()->json(["message" => "failed"]);
+    }
+
+    public function doUnRetweet(Request $request)
+    {
+        $tweet = Tweets::find($request->TweetID);
+        if ($tweet) {
+            $tweet->RetweetCount -= 1;
+            $tweet->save();
+            $retweet = Retweets::find($request->LikeID);
+            $retweet->delete();
+            if ($retweet->trashed()) {
                 return response()->json(["message" => "success"]);
             } else return response()->json(["message" => "failed"]);
         } else return response()->json(["message" => "failed"]);

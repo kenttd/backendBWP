@@ -11,5 +11,5 @@ class Retweets extends Model
 {
     protected $table = 'Retweet'; // Specify your table name
     protected $primaryKey = 'RetweetID'; // Specify your primary key column name
-    public $timestamps = true; // Disable timestamps
+    protected $fillable = ['UserID', 'TweetID', 'TimeStamp'];
 }
