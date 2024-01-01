@@ -6,6 +6,7 @@ use App\Models\Bookmarks;
 use App\Models\DirectMessages;
 use App\Models\Follows;
 use App\Models\Likes;
+use App\Models\Replies;
 use App\Models\Retweets;
 use App\Models\Tweets;
 use App\Models\Users;
@@ -373,5 +374,23 @@ class UserController extends Controller
             return response()->json(['message' => 'success']);
         }
         return response()->json(['message' => 'failed']);
+    }
+
+    public function getTweetDetail($TweetID)
+    {
+        $tweet = Tweets::where('TweetID', $TweetID)->with(['user', 'likes' => function ($query) use ($TweetID) {
+            $query->where('TweetID', $TweetID);
+        }, 'retweets' => function ($query) use ($TweetID) {
+            $query->where('TweetID', $TweetID);
+        }])->first();
+
+        $tweet->liked = $tweet->likes->isNotEmpty();
+        $tweet->likeid = $tweet->liked ? $tweet->likes->first()->LikeID : null;
+        unset($tweet->likes);
+        $tweet->retweeted = $tweet->retweets->isNotEmpty();
+        $tweet->retweetid = $tweet->retweeted ? $tweet->retweets->first()->RetweetID : null;
+        unset($tweet->retweets);
+        $replies = Replies::where('TweetID', $TweetID)->with('user')->get();
+        return response()->json(['tweet' => $tweet, 'replies' => $replies]);
     }
 }

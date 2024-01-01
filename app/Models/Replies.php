@@ -14,4 +14,8 @@ class Replies extends Model
     protected $primaryKey = 'ReplyID'; // Specify your primary key column name
 
     protected $fillable = ['TweetID', 'ParentReplyID', 'ReplyContent', 'LikesCount', 'RetweetsCount', 'RepliesCount'];
+    public function user()
+    {
+        return $this->belongsTo(Users::class, 'UserID');
+    }
 }
