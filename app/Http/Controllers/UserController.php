@@ -170,7 +170,7 @@ class UserController extends Controller
                     "TweetID" => $request->TweetID
                 ]);
             }
-            return response()->json(["LikeID" => $newRetweet->RetweetID ?? $request->RetweetID, "update" => $request->update]);
+            return response()->json(["RetweetID" => $newRetweet->RetweetID ?? $request->RetweetID, "update" => $request->update]);
         } else return response()->json(["message" => "failed"]);
     }
 
@@ -178,7 +178,7 @@ class UserController extends Controller
     {
         $tweet = Tweets::find($request->TweetID);
         if ($tweet) {
-            $tweet->RetweetCount -= 1;
+            $tweet->RetweetsCount -= 1;
             $tweet->save();
             $retweet = Retweets::find($request->RetweetID);
             $retweet->delete();
