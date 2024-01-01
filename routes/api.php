@@ -54,4 +54,5 @@ Route::post('/sendMessage', [UserController::class, 'sendMessage']);
 Route::post('/editMessage', [UserController::class, 'editMessage']);
 Route::post('/deleteMessage', [UserController::class, 'deleteMessage']);
 Route::get('/getTweetDetail/{TweetID}', [UserController::class, 'getTweetDetail']);
+Route::get('/tweetExist/{TweetID}', [UserController::class, 'tweetExist']);
 Route::get('/{username}', [UserController::class, 'getUserByUsername']); // buat cari user

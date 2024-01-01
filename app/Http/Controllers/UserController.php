@@ -395,4 +395,10 @@ class UserController extends Controller
         $replies = Replies::where('TweetID', $TweetID)->with('user')->get();
         return response()->json(['tweet' => $tweet, 'replies' => $replies]);
     }
+
+    public function tweetExist($TweetID)
+    {
+        if (Tweets::find($TweetID) == null) abort(404);
+        return response()->json(['tweet' => Tweets::find($TweetID)]);
+    }
 }
