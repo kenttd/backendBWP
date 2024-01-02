@@ -404,24 +404,24 @@ class UserController extends Controller
 
     public function listFollowing($Username)
     {
-        $user = Users::where('Username', $Username);
-        if ($user) abort(404);
+        $user = Users::where('Username', $Username)->first();
+        if (!$user) abort(404);
         $following = $user->following()->with('following')->get();
-        return response()->json(['following' => $following]);
+        return response()->json(['following' => $user]);
     }
 
     public function listFollower($Username)
     {
-        $user = Users::where('Username', $Username);
-        if ($user) abort(404);
+        $user = Users::where('Username', $Username)->first();
+        if (!$user) abort(404);
         $follower = $user->followers()->with('follower')->get();
         return response()->json(['follower' => $follower]);
     }
 
     public function listLikes($Username)
     {
-        $user = Users::where('Username', $Username);
-        if ($user) abort(404);
+        $user = Users::where('Username', $Username)->first();
+        if (!$user) abort(404);
         $likes = $user->likes()->with('tweet')->get();
         return response()->json(['likes' => $likes]);
     }
