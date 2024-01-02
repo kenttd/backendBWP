@@ -112,7 +112,13 @@ class UserController extends Controller
             unset($post->likes);
         });
 
-        return response()->json(['posts' => $posts]);
+        // Check if $requester is following $id
+        $isFollowing = Follows::where('FollowerID', $requester)->where('FollowingID', $id)->exists();
+
+        // Check if $id is following $requester
+        $isFollowed = Follows::where('FollowingID', $requester)->where('FollowerID', $id)->exists();
+
+        return response()->json(['posts' => $posts, 'isFollowing' => $isFollowing, 'isFollowed' => $isFollowed]);
     }
 
     public function getBookmark($id)
@@ -463,8 +469,13 @@ class UserController extends Controller
             unset($post->likes, $post->retweets);
             return $post;
         });
+        // Check if $requester is following $id
+        $isFollowing = Follows::where('FollowerID', $requester)->where('FollowingID', $id)->exists();
 
-        return response()->json(['posts' => $posts]);
+        // Check if $id is following $requester
+        $isFollowed = Follows::where('FollowingID', $requester)->where('FollowerID', $id)->exists();
+
+        return response()->json(['posts' => $posts, 'isFollowing' => $isFollowing, 'isFollowed' => $isFollowed]);
     }
 
     public function userExist($username)
