@@ -401,4 +401,28 @@ class UserController extends Controller
         if (Tweets::find($TweetID) == null) abort(404);
         return response()->json(['tweet' => Tweets::find($TweetID)]);
     }
+
+    public function listFollowing($UserID)
+    {
+        $user = Users::find($UserID);
+        if ($user == null) abort(404);
+        $following = $user->following()->with('following')->get();
+        return response()->json(['following' => $following]);
+    }
+
+    public function listFollower($UserID)
+    {
+        $user = Users::find($UserID);
+        if ($user == null) abort(404);
+        $follower = $user->followers()->with('follower')->get();
+        return response()->json(['follower' => $follower]);
+    }
+
+    public function listLikes($UserID)
+    {
+        $user = Users::find($UserID);
+        if ($user == null) abort(404);
+        $likes = $user->likes()->with('tweet')->get();
+        return response()->json(['likes' => $likes]);
+    }
 }
