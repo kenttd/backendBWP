@@ -14,4 +14,9 @@ class Retweets extends Model
     protected $table = 'Retweet'; // Specify your table name
     protected $primaryKey = 'RetweetID'; // Specify your primary key column name
     protected $fillable = ['UserID', 'TweetID', 'TimeStamp'];
+
+    public function tweet()
+    {
+        return $this->belongsTo(Tweets::class, 'TweetID');
+    }
 }

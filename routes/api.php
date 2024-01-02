@@ -29,7 +29,7 @@ Route::post('/register', [AuthController::class, 'register']); // untuk register
 Route::get('/post/{id}', [UserController::class, 'Post']); //buat home user, id dari cookie
 Route::get('/search/{username}', [UserController::class, 'search']); // waktu search
 Route::post('/quack', [UserController::class, 'quack']); // buat post tweet
-Route::get('/getpost/{id}/{requester}', [UserController::class, 'getPost']); // buat dapet post dari user (ga harus user yang lagi log in)
+Route::get('/getpost/{id}/{requester}', [UserController::class, 'getPost']); // buat dapet post dari user
 Route::get('/getBookmark/{id}', [UserController::class, 'getBookmark']);
 Route::get('/getLike/{id}', [UserController::class, 'getLike']);
 Route::post('/doLike', [UserController::class, 'doLike']);
@@ -57,7 +57,9 @@ Route::get('/getTweetDetail/{TweetID}', [UserController::class, 'getTweetDetail'
 Route::get('/tweetExist/{TweetID}', [UserController::class, 'tweetExist']);
 Route::get('/listFollowing/{Username}', [UserController::class, 'listFollowing']);
 Route::get('/listFollower/{Username}', [UserController::class, 'listFollower']);
+Route::get('/listVerifiedFollower/{Username}', [UserController::class, 'listVerifiedFollower']);
 
-Route::get('/listLikes/{Username}', [UserController::class, 'listLikes']);
+Route::get('/listLikes/{id}/{requester}', [UserController::class, 'listLikes']);
+Route::get('/userExist/{username}', [UserController::class, 'userExist']);
 
 Route::get('/{username}', [UserController::class, 'getUserByUsername']); // buat cari user

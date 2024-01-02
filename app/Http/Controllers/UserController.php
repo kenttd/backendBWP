@@ -83,24 +83,36 @@ class UserController extends Controller
         return response()->json(["list" => $list]);
     }
 
-    public function getPost(Request $request)
+    public function getPost($id, $requester)
     {
-        $user = Users::find($request->id);
-        $requester = Users::find($request->requester);
+        // Fetch the tweets that the user has posted
+        $userPosts = Tweets::where('UserID', $id)
+            ->with(['user', 'likes' => function ($query) use ($requester) {
+                $query->where('UserID', $requester);
+            }])
+            ->get();
 
-        $userIsFollowingRequester = $user->following->contains('FollowingID', $request->requester);
-        $requesterIsFollowingUser = $user->followers->contains('FollowerID', $request->requester);
+        // Fetch the tweets that the user has retweeted
+        $retweets = Users::find($id)->retweets
+            ->load(['tweet' => function ($query) use ($requester) {
+                $query->with(['user', 'likes' => function ($query) use ($requester) {
+                    $query->where('UserID', $requester);
+                }]);
+            }]);
 
-        $tweets = $user->tweets()->with('user')->get();
+        // Merge the two collections
+        $posts = $userPosts->concat($retweets->map(function ($retweet) {
+            $retweet->tweet->isRetweed = true;
+            return $retweet->tweet;
+        }));
 
-        return response()->json([
-            "tweets" => $tweets,
-            "isFollowed" => $userIsFollowingRequester,
-            "isFollowing" => $requesterIsFollowingUser,
-            "isVerified" => $user->isVerified,
-            "isStaff" => $user->isStaff
-        ]);
-        return response()->json(["tweets" => $tweets]);
+        $posts->each(function ($post) use ($requester) {
+            $post->liked = $post->likes->where('UserID', $requester)->isNotEmpty();
+            $post->likeid = $post->liked ? $post->likes->first()->LikeID : null;
+            unset($post->likes);
+        });
+
+        return response()->json(['posts' => $posts]);
     }
 
     public function getBookmark($id)
@@ -418,11 +430,45 @@ class UserController extends Controller
         return response()->json(['follower' => $follower]);
     }
 
-    public function listLikes($Username)
+    public function listVerifiedFollower($Username)
     {
         $user = Users::where('Username', $Username)->first();
         if (!$user) abort(404);
-        $likes = $user->likes()->with('tweet')->get();
-        return response()->json(['likes' => $likes]);
+        $follower = $user->followers()->with(['follower' => function ($query) {
+            $query->where('isVerified', true);
+        }])->get();
+        return response()->json(['follower' => $follower]);
+    }
+
+    public function listLikes($id, $requester)
+    {
+        // Fetch the tweets that the user has liked
+        $likedPosts = Likes::where('UserID', $id)
+            ->with(['tweet' => function ($query) use ($requester) {
+                $query->with(['user', 'likes' => function ($query) use ($requester) {
+                    $query->where('UserID', $requester);
+                }, 'retweets' => function ($query) use ($requester) {
+                    $query->where('UserID', $requester);
+                }]);
+            }])
+            ->get();
+
+        // Transform the collection
+        $posts = $likedPosts->map(function ($like) use ($requester) {
+            $post = $like->tweet;
+            $post->liked = $post->likes->where('UserID', $requester)->isNotEmpty();
+            $post->likeid = $post->liked ? $post->likes->first()->LikeID : null;
+            $post->isRetweed = $post->retweets->where('UserID', $requester)->isNotEmpty();
+            $post->retweetid = $post->isRetweed ? $post->retweets->first()->RetweetID : null;
+            unset($post->likes, $post->retweets);
+            return $post;
+        });
+
+        return response()->json(['posts' => $posts]);
+    }
+
+    public function userExist($username)
+    {
+        return (Users::where('Username', $username)->first() == null) ? abort(404) : response()->json(['user' => Users::where('Username', $username)->first()]);
     }
 }
