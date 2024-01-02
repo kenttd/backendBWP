@@ -89,6 +89,8 @@ class UserController extends Controller
         $userPosts = Tweets::where('UserID', $id)
             ->with(['user', 'likes' => function ($query) use ($requester) {
                 $query->where('UserID', $requester);
+            }, 'retweets' => function ($query) use ($id) {
+                $query->where('UserID', $id);
             }])
             ->get();
 
@@ -110,6 +112,9 @@ class UserController extends Controller
             $post->liked = $post->likes->where('UserID', $requester)->isNotEmpty();
             $post->likeid = $post->liked ? $post->likes->first()->LikeID : null;
             unset($post->likes);
+            $post->retweeted = $post->retweets->isNotEmpty();
+            $post->retweetid = $post->retweeted ? $post->retweets->first()->RetweetID : null;
+            unset($post->retweets);
         });
 
         // Check if $requester is following $id
