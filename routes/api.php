@@ -56,5 +56,8 @@ Route::post('/deleteMessage', [UserController::class, 'deleteMessage']);
 Route::get('/getTweetDetail/{TweetID}', [UserController::class, 'getTweetDetail']);
 Route::get('/tweetExist/{TweetID}', [UserController::class, 'tweetExist']);
 Route::get('/listFollowing/{UserID}', [UserController::class, 'listFollowing']);
+Route::get('/listFollower/{UserID}', [UserController::class, 'listFollower']);
+
+Route::get('/listLikes/{UserID}', [UserController::class, 'listLikes']);
 
 Route::get('/{username}', [UserController::class, 'getUserByUsername']); // buat cari user
