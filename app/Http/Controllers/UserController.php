@@ -407,7 +407,7 @@ class UserController extends Controller
         $user = Users::where('Username', $Username)->first();
         if (!$user) abort(404);
         $following = $user->following()->with('following')->get();
-        return response()->json(['following' => $user]);
+        return response()->json(['following' => $following]);
     }
 
     public function listFollower($Username)
