@@ -405,7 +405,7 @@ class UserController extends Controller
     public function listFollowing($Username)
     {
         $user = Users::where('Username', $Username);
-        if ($user == null) abort(404);
+        if ($user) abort(404);
         $following = $user->following()->with('following')->get();
         return response()->json(['following' => $following]);
     }
@@ -413,7 +413,7 @@ class UserController extends Controller
     public function listFollower($Username)
     {
         $user = Users::where('Username', $Username);
-        if ($user == null) abort(404);
+        if ($user) abort(404);
         $follower = $user->followers()->with('follower')->get();
         return response()->json(['follower' => $follower]);
     }
@@ -421,7 +421,7 @@ class UserController extends Controller
     public function listLikes($Username)
     {
         $user = Users::where('Username', $Username);
-        if ($user == null) abort(404);
+        if ($user) abort(404);
         $likes = $user->likes()->with('tweet')->get();
         return response()->json(['likes' => $likes]);
     }
