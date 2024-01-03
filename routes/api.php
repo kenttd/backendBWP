@@ -48,7 +48,7 @@ Route::post('/doUnverify', [UserController::class, 'doUnverify']);
 Route::post('/doUnban', [UserController::class, 'doUnban']);
 Route::post('/doStaff', [UserController::class, 'doStaff']);
 Route::post('/doUnstaff', [UserController::class, 'doUnstaff']);
-Route::get('/getVerifiedPost', [UserController::class, 'getVerifiedPost']);
+Route::get('/getVerifiedPost/{id}/{role}', [UserController::class, 'getVerifiedPost'])->middleware('CheckRole:verified');
 Route::post('/getMessagesSpecific', [UserController::class, 'getMessagesSpecific']);
 Route::post('/sendMessage', [UserController::class, 'sendMessage']);
 Route::post('/editMessage', [UserController::class, 'editMessage']);

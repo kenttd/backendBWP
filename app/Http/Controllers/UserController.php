@@ -338,10 +338,29 @@ class UserController extends Controller
         return response()->json(["message" => "failed"]);
     }
 
-    public function getVerifiedPost()
+    public function getVerifiedPost($id)
     {
-        $users = Users::where('isVerified', true)->with('tweets')->get();
-        return response()->json(["users" => $users]);
+        $posts = Tweets::whereHas('user', function ($query) {
+            $query->where('isVerified', 1);
+        })
+            ->with(['user', 'likes' => function ($query) use ($id) {
+                $query->where('UserID', $id);
+            }, 'retweets' => function ($query) use ($id) {
+                $query->where('UserID', $id);
+            }])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $posts->each(function ($post) {
+            $post->liked = $post->likes->isNotEmpty();
+            $post->likeid = $post->liked ? $post->likes->first()->LikeID : null;
+            unset($post->likes);
+            $post->retweeted = $post->retweets->isNotEmpty();
+            $post->retweetid = $post->retweeted ? $post->retweets->first()->RetweetID : null;
+            unset($post->retweets);
+        });
+
+        return response()->json(['posts' => $posts]);
     }
 
     public function getMessagesSpecific(Request $request)
