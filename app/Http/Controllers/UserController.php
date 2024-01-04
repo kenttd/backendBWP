@@ -76,11 +76,27 @@ class UserController extends Controller
         return response()->json(["list" => $list]);
     }
 
-    public function searchTweet(Request $request)
+    public function searchTweet($q, $id)
     {
-        $q = $request->q;
-        $list = Users::where("TweetContent", "LIKE", "%$q%")->get() ?? [];
-        return response()->json(["list" => $list]);
+        $posts = Tweets::where('TweetContent', 'LIKE', '%' . $q . '%')
+            ->with(['user', 'likes' => function ($query) use ($id) {
+                $query->where('UserID', $id);
+            }, 'retweets' => function ($query) use ($id) {
+                $query->where('UserID', $id);
+            }])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $posts->each(function ($post) {
+            $post->liked = $post->likes->isNotEmpty();
+            $post->likeid = $post->liked ? $post->likes->first()->LikeID : null;
+            unset($post->likes);
+            $post->retweeted = $post->retweets->isNotEmpty();
+            $post->retweetid = $post->retweeted ? $post->retweets->first()->RetweetID : null;
+            unset($post->retweets);
+        });
+
+        return response()->json(['posts' => $posts]);
     }
 
     public function getPost($id, $requester)
