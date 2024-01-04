@@ -76,15 +76,16 @@ class UserController extends Controller
         return response()->json(["list" => $list]);
     }
 
-    public function searchTweet($q, $id)
+    public function searchTweet($q, $id, $sort = "created_at,desc")
     {
+        $parts = explode(",", $sort);
         $posts = Tweets::where('TweetContent', 'LIKE', '%' . $q . '%')
             ->with(['user', 'likes' => function ($query) use ($id) {
                 $query->where('UserID', $id);
             }, 'retweets' => function ($query) use ($id) {
                 $query->where('UserID', $id);
             }])
-            ->orderBy('created_at', 'desc')
+            ->orderBy($parts[0], $parts[1])
             ->get();
 
         $posts->each(function ($post) {
