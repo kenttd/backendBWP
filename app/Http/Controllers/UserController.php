@@ -523,4 +523,21 @@ class UserController extends Controller
     {
         return (Users::where('Username', $username)->first() == null) ? abort(404) : response()->json(['user' => Users::where('Username', $username)->first()]);
     }
+
+    public function doReply(Request $request)
+    {
+        $reply = Replies::create([
+            "TweetID" => $request->TweetID,
+            "ParentReplyID" => $request->ParentReplyID,
+            "ReplyContent" => $request->ReplyContent,
+            "LikesCount" => 0,
+            "RetweetsCount" => 0,
+            "RepliesCount" => 0,
+            "UserID" => $request->UserID
+        ]);
+        if ($reply) {
+            return response()->json(["message" => "success"]);
+        }
+        return response()->json(["message" => "failed"]);
+    }
 }
