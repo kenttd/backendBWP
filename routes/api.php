@@ -63,6 +63,8 @@ Route::get('/listLikes/{id}/{requester}', [UserController::class, 'listLikes']);
 Route::get('/userExist/{username}', [UserController::class, 'userExist']);
 Route::get('/searchTweet/{q}/{id}/{sort?}', [UserController::class, 'searchTweet']);
 Route::post('/postReply', [UserController::class, 'doReply']);
+Route::post('/editProfile', [UserController::class, 'editProfile']);
+
 
 
 Route::get('/{username}', [UserController::class, 'getUserByUsername']); // buat cari user

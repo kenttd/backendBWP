@@ -540,4 +540,13 @@ class UserController extends Controller
         }
         return response()->json(["message" => "failed"]);
     }
+
+    public function editProfile(Request $request)
+    {
+        $user = Users::where("UserID", $request->UserID)->update(["Bio" => $request->Bio, "link" => $request->link]);
+        if ($user) {
+            return response()->json(["message" => "success"]);
+        }
+        return response()->json(["message" => "failed"]);
+    }
 }
