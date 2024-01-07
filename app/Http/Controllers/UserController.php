@@ -568,11 +568,11 @@ class UserController extends Controller
         return response()->json(["message" => "failed"], 401);
     }
 
-    public function getDeletedTweet($id)
+    public function getDeletedTweet($username)
     {
-        $posts = Tweets::onlyTrashed()->where('UserID', $id)->get();
+        $posts = Users::where("Username", $username)->first();
         if ($posts) {
-            return response()->json(['posts' => $posts]);
+            return response()->json(['posts' => $posts->tweets()->onlyTrashed()->with('user')->get()]);
         }
         return response()->json(["message" => "failed"], 401);
     }
