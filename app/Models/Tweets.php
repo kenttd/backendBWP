@@ -5,11 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use League\CommonMark\Extension\Mention\Mention;
 
 class Tweets extends Model
 {
+    use SoftDeletes;
     protected $table = 'Tweet'; // Specify your table name
     protected $primaryKey = 'TweetID'; // Specify your primary key column name
     public $timestamps = true; // Disable timestamps

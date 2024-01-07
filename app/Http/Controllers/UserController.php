@@ -526,6 +526,9 @@ class UserController extends Controller
 
     public function doReply(Request $request)
     {
+        $tweet = Tweets::find($request->TweetID);
+        $tweet->RepliesCount += 1;
+        $tweet->save();
         $reply = Replies::create([
             "TweetID" => $request->TweetID,
             "ParentReplyID" => $request->ParentReplyID,
@@ -548,5 +551,24 @@ class UserController extends Controller
             return response()->json(["message" => "success"]);
         }
         return response()->json(["message" => "failed"]);
+    }
+
+    public function deleteTweet(Request $request)
+    {
+        $tweet = Tweets::find($request->TweetID);
+        if ($tweet) {
+            $tweet->delete();
+            return response()->json(["message" => "success"]);
+        }
+        return response()->json(["message" => "failed"], 401);
+    }
+
+    public function getDeletedTweet($id)
+    {
+        $posts = Tweets::onlyTrashed()->where('UserID', $id)->get();
+        if ($posts) {
+            return response()->json(['posts' => $posts]);
+        }
+        return response()->json(["message" => "failed"], 401);
     }
 }
