@@ -64,6 +64,8 @@ Route::get('/userExist/{username}', [UserController::class, 'userExist']);
 Route::get('/searchTweet/{q}/{id}/{sort?}', [UserController::class, 'searchTweet']);
 Route::post('/postReply', [UserController::class, 'doReply']);
 Route::post('/editProfile', [UserController::class, 'editProfile']);
+Route::post('/deleteTweet', [UserController::class, 'deleteTweet']);
+Route::get('/getDeletedTweet/{id}', [UserController::class, 'getDeletetedTweet'])->middleware('CheckRole:verified');
 
 
 
