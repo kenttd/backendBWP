@@ -109,6 +109,7 @@ class UserController extends Controller
             }, 'retweets' => function ($query) use ($id) {
                 $query->where('UserID', $id);
             }])
+            ->orderby('created_at', 'desc')
             ->get();
 
         // Fetch the tweets that the user has retweeted
@@ -152,7 +153,9 @@ class UserController extends Controller
             }, 'retweets' => function ($query) use ($id) {
                 $query->where('UserID', $id);
             }]);
-        }])->get();
+        }])
+            ->orderby('created_at', 'desc')
+            ->get();
 
         $bookmarks->each(function ($bookmark) {
             $bookmark->Tweet->liked = $bookmark->Tweet->likes->isNotEmpty();
@@ -498,6 +501,8 @@ class UserController extends Controller
                     $query->where('UserID', $requester);
                 }]);
             }])
+            ->orderby('created_at', 'desc')
+
             ->get();
 
         // Transform the collection
